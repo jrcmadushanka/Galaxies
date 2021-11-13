@@ -1,5 +1,7 @@
 package com.civ.galaxies.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.civ.galaxies.api.APIInterface;
 import com.civ.galaxies.api.client.APIClient;
 import com.civ.galaxies.model.Planet;
+import com.civ.galaxies.model.PlanetResponse;
 
 import java.util.List;
 
@@ -19,31 +22,47 @@ public class HomeViewModel extends ViewModel {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final APIInterface apiInterface = APIClient.getBasicClient().create(APIInterface.class);
 
-    private final MutableLiveData<List<Planet>> mutableLivePlanets = new MutableLiveData<>();
+    private final MutableLiveData<PlanetResponse> mutableLivePlanets = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> hasMoreData = new MutableLiveData<>();
     private final MutableLiveData<String> onError = new MutableLiveData<>();
 
-    public LiveData<List<Planet>> getPlanets(){
+    public LiveData<PlanetResponse> getPlanets(){
         return mutableLivePlanets;
     }
 
     public LiveData<Boolean> isLoading(){
         return isLoading;
     }
+    public LiveData<Boolean> hasMoreData(){
+        return hasMoreData;
+    }
 
     public LiveData<String> onError(){
         return onError;
     }
 
+    private int nextPage = 1;
+
     public void fetchPlanetData(){
         isLoading.setValue(true);
         disposable.add(
-                apiInterface.getAllPlanets()
+                apiInterface.getAllPlanets(nextPage)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(planetResponse -> {
                             if (planetResponse.getResults() != null) {
-                                mutableLivePlanets.postValue(planetResponse.getResults());
+                                mutableLivePlanets.postValue(planetResponse);
+
+                                if (planetResponse.getNext() != null){
+                                    hasMoreData.postValue(true);
+                                    nextPage++;
+                                    Log.e( "fetchPlanetData: ", nextPage + " Has next");
+                                } else {
+                                    hasMoreData.postValue(false);
+
+                                    Log.e( "fetchPlanetData: ", nextPage + " No next");
+                                }
                             } else {
                                 onError.postValue("Couldn't find planet data.");
                             }

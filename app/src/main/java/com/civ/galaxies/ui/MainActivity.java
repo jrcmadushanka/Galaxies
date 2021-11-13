@@ -1,12 +1,13 @@
 package com.civ.galaxies.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.util.Log;
 
 import com.civ.galaxies.R;
 import com.civ.galaxies.databinding.ActivityMainBinding;
@@ -22,41 +23,79 @@ public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;
     private final List<Planet> planetList = new ArrayList<>();
+    private HomeViewModel viewModel;
+    private PlanetBasicAdapter planetBasicAdapter;
+    private boolean hasMoreData = true;
+    private boolean isAnimating = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         init();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private void init(){
+    private void init() {
 
-        HomeViewModel viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         viewModel.isLoading().observe(this, isLoading -> {
-            if (isLoading){
-                showLoader("Please wait...");
+            if (isLoading) {
+                binding.setIsLoadingMore(true);
             } else {
-                hideLoader();
+                binding.setIsLoadingMore(false);
             }
         });
         viewModel.onError().observe(this, this::showLongToastMessage);
-        viewModel.fetchPlanetData();
-
-        PlanetBasicAdapter planetBasicAdapter = new PlanetBasicAdapter(planetList, planet -> {
-            UiUtils.showPlanetDetailsDialog(MainActivity.this,planet);
+        viewModel.hasMoreData().observe(this, hasMoreData -> {
+            Log.e( "init: ", String.valueOf(hasMoreData));
+            this.hasMoreData = hasMoreData;
         });
 
-        viewModel.getPlanets().observe(this, planets -> {
-            Log.e("init: ", "Got Planets : " + planets.size() );
-            planetList.clear();
-            planetList.addAll(planets);
-            planetBasicAdapter.notifyDataSetChanged();
+        viewModel.getPlanets().observe(this, planetResponse -> {
+            int currentCount = planetList.size();
+            planetList.addAll(planetResponse.getResults());
+            planetBasicAdapter.notifyItemInserted(currentCount);
+        });
+
+        loadPlanets();
+
+        planetBasicAdapter = new PlanetBasicAdapter(planetList, planet -> {
+            UiUtils.showPlanetDetailsDialog(MainActivity.this, planet);
         });
 
         LinearLayoutManager mainLayoutManager = new LinearLayoutManager(this);
         binding.rvMain.setLayoutManager(mainLayoutManager);
         binding.rvMain.setAdapter(planetBasicAdapter);
+        binding.rvMain.setOnScrollChangeListener((view, i, i1, i2, i3) -> {
+            if (!binding.rvMain.canScrollVertically(1)){
+                loadPlanets();
+            }
+
+            if (mainLayoutManager.findFirstVisibleItemPosition() == 0 && binding.tvHeader.getAlpha() < 1f && !isAnimating){
+                isAnimating = true;
+                binding.tvHeader.animate().setDuration(500).alpha(1f).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        isAnimating = false;
+                    }
+                }).start();
+            } else if( mainLayoutManager.findFirstVisibleItemPosition() > 0 && binding.tvHeader.getAlpha() > 0f && !isAnimating) {
+                binding.tvHeader.animate().setDuration(500).alpha(0f).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        isAnimating = false;
+                    }
+                }).start();
+            }
+        });
+    }
+
+    void loadPlanets(){
+        if (hasMoreData) {
+            Log.e( "init: ", "Has data");
+            viewModel.fetchPlanetData();
+        }
     }
 }

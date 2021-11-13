@@ -60,7 +60,7 @@ public class PlanetBasicAdapter extends RecyclerView.Adapter<PlanetBasicAdapter.
             binding.getRoot().setOnClickListener(view -> {
                 onPlanetSelectListener.onPlanetClick(planet);
             });
-            Picasso.get().load("https://picsum.photos/id/" + planet.getImageId() + "/700/350").fit().placeholder(R.drawable.galaxy_logo).into(binding.ivMainImage);
+            Picasso.get().load("https://picsum.photos/id/" + planet.getImageId() + "/400/200").fit().placeholder(R.drawable.galaxy_logo).into(binding.ivMainImage);
         }
     }
 }
