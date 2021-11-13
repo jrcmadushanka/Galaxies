@@ -1,7 +1,5 @@
 package com.civ.galaxies.api.client;
 
-import android.content.Context;
-
 import com.civ.galaxies.network.OkHttpBasicNetworkClient;
 import com.civ.galaxies.utils.ApplicationConstants;
 

@@ -1,7 +1,5 @@
 package com.civ.galaxies.network;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Dispatcher;
