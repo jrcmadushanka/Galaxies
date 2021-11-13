@@ -12,6 +12,7 @@ import com.civ.galaxies.R;
 import com.civ.galaxies.databinding.ActivityMainBinding;
 import com.civ.galaxies.model.Planet;
 import com.civ.galaxies.ui.adapter.PlanetBasicAdapter;
+import com.civ.galaxies.utils.UiUtils;
 import com.civ.galaxies.viewmodel.HomeViewModel;
 
 import java.util.ArrayList;
@@ -43,7 +44,9 @@ public class MainActivity extends BaseActivity {
         viewModel.onError().observe(this, this::showLongToastMessage);
         viewModel.fetchPlanetData();
 
-        PlanetBasicAdapter planetBasicAdapter = new PlanetBasicAdapter(planetList);
+        PlanetBasicAdapter planetBasicAdapter = new PlanetBasicAdapter(planetList, planet -> {
+            UiUtils.showPlanetDetailsDialog(MainActivity.this,planet);
+        });
 
         viewModel.getPlanets().observe(this, planets -> {
             Log.e("init: ", "Got Planets : " + planets.size() );

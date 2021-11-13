@@ -1,16 +1,33 @@
 package com.civ.galaxies.model;
 
 import java.io.Serializable;
-
 public class Planet implements Serializable{
 
     private String climate;
+    private String terrain;
     private String gravity;
     private String name;
+    private String diameter;
     private String orbital_period;
     private String population;
     private String rotation_period;
     private int imageId;
+
+    public String getDiameter() {
+        return diameter;
+    }
+
+    public void setDiameter(String diameter) {
+        this.diameter = diameter;
+    }
+
+    public String getTerrain() {
+        return terrain;
+    }
+
+    public void setTerrain(String terrain) {
+        this.terrain = terrain;
+    }
 
     public int getImageId() {
         return imageId;

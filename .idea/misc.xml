@@ -5,8 +5,11 @@
       <map>
         <entry key="..\:/Users/Chathura C4/AndroidStudioProjects/Galaxies/app/src/main/res/layout/activity_main.xml" value="0.35260416666666666" />
         <entry key="..\:/Users/Chathura C4/AndroidStudioProjects/Galaxies/app/src/main/res/layout/activity_splash_screen.xml" value="0.36666666666666664" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.121875" />
-        <entry key="app/src/main/res/layout/card_planet.xml" value="0.25" />
+        <entry key="app/src/main/res/drawable/dialog_rounded_corner.xml" value="0.26666666666666666" />
+        <entry key="app/src/main/res/drawable/ic_close.xml" value="0.26666666666666666" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/card_planet.xml" value="0.4182098765432099" />
+        <entry key="app/src/main/res/layout/dialog_planet_details.xml" value="0.335" />
       </map>
     </option>
   </component>

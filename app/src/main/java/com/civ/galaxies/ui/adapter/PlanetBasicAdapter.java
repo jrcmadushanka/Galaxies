@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.civ.galaxies.R;
 import com.civ.galaxies.databinding.CardPlanetBinding;
+import com.civ.galaxies.interfaces.OnPlanetSelectListener;
 import com.civ.galaxies.model.Planet;
 import com.squareup.picasso.Picasso;
 
@@ -16,9 +17,11 @@ import java.util.Random;
 
 public class PlanetBasicAdapter extends RecyclerView.Adapter<PlanetBasicAdapter.ViewHolder> {
     List<Planet> planetList;
+    OnPlanetSelectListener onPlanetSelectListener;
 
-    public PlanetBasicAdapter(List<Planet> planetList) {
+    public PlanetBasicAdapter(List<Planet> planetList, OnPlanetSelectListener onPlanetSelectListener) {
         this.planetList = planetList;
+        this.onPlanetSelectListener = onPlanetSelectListener;
     }
 
     @NonNull
@@ -43,7 +46,7 @@ public class PlanetBasicAdapter extends RecyclerView.Adapter<PlanetBasicAdapter.
         return planetList.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
         CardPlanetBinding binding;
 
         public ViewHolder(@NonNull CardPlanetBinding itemView) {
@@ -54,7 +57,10 @@ public class PlanetBasicAdapter extends RecyclerView.Adapter<PlanetBasicAdapter.
         void bind(Planet planet){
             binding.setPlanetViewModel(planet);
             planet.setImageId(new Random().nextInt(800));
-            Picasso.get().load("https://picsum.photos/id/" + planet.getImageId() + "/1000").placeholder(R.drawable.galaxy_logo).into(binding.ivMainImage);
+            binding.getRoot().setOnClickListener(view -> {
+                onPlanetSelectListener.onPlanetClick(planet);
+            });
+            Picasso.get().load("https://picsum.photos/id/" + planet.getImageId() + "/700/350").fit().placeholder(R.drawable.galaxy_logo).into(binding.ivMainImage);
         }
     }
 }
