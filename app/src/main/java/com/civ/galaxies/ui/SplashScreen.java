@@ -22,6 +22,7 @@ public class SplashScreen extends BaseActivity {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                finish();
             }
         }).start();
         binding.ivPlanet.animate().setDuration(1500).setStartDelay(500).alpha(1f).start();
