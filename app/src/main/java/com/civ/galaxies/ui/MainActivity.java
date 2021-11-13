@@ -3,7 +3,6 @@ package com.civ.galaxies.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
@@ -47,7 +46,6 @@ public class MainActivity extends BaseActivity {
         });
         viewModel.onError().observe(this, this::showLongToastMessage);
         viewModel.hasMoreData().observe(this, hasMoreData -> {
-            Log.e("init: ", String.valueOf(hasMoreData));
             this.hasMoreData = hasMoreData;
         });
 
@@ -94,7 +92,6 @@ public class MainActivity extends BaseActivity {
 
     void loadPlanets() {
         if (hasMoreData) {
-            Log.e("init: ", "Has data");
             viewModel.fetchPlanetData();
         }
     }
