@@ -2,6 +2,7 @@ package com.civ.galaxies.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
@@ -34,20 +35,19 @@ public class MainActivity extends BaseActivity {
         init();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        planetBasicAdapter.notifyDataSetChanged();
+    }
+
     private void init() {
 
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        viewModel.isLoading().observe(this, isLoading -> {
-            if (isLoading) {
-                binding.setIsLoadingMore(true);
-            } else {
-                binding.setIsLoadingMore(false);
-            }
-        });
+        viewModel.isLoading().observe(this, isLoading -> binding.setIsLoadingMore(isLoading));
         viewModel.onError().observe(this, this::showLongToastMessage);
-        viewModel.hasMoreData().observe(this, hasMoreData -> {
-            this.hasMoreData = hasMoreData;
-        });
+        viewModel.hasMoreData().observe(this, hasMoreData -> this.hasMoreData = hasMoreData);
 
         viewModel.getPlanets().observe(this, planetResponse -> {
             int currentCount = planetList.size();
@@ -57,9 +57,7 @@ public class MainActivity extends BaseActivity {
 
         loadPlanets();
 
-        planetBasicAdapter = new PlanetBasicAdapter(planetList, planet -> {
-            UiUtils.showPlanetDetailsDialog(MainActivity.this, planet);
-        });
+        planetBasicAdapter = new PlanetBasicAdapter(planetList, planet -> UiUtils.showPlanetDetailsDialog(MainActivity.this, planet));
 
         LinearLayoutManager mainLayoutManager = new LinearLayoutManager(this);
         binding.rvMain.setLayoutManager(mainLayoutManager);
