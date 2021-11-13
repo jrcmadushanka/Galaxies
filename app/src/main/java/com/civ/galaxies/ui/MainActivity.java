@@ -21,8 +21,8 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
-    private ActivityMainBinding binding;
     private final List<Planet> planetList = new ArrayList<>();
+    private ActivityMainBinding binding;
     private HomeViewModel viewModel;
     private PlanetBasicAdapter planetBasicAdapter;
     private boolean hasMoreData = true;
@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
         });
         viewModel.onError().observe(this, this::showLongToastMessage);
         viewModel.hasMoreData().observe(this, hasMoreData -> {
-            Log.e( "init: ", String.valueOf(hasMoreData));
+            Log.e("init: ", String.valueOf(hasMoreData));
             this.hasMoreData = hasMoreData;
         });
 
@@ -67,11 +67,11 @@ public class MainActivity extends BaseActivity {
         binding.rvMain.setLayoutManager(mainLayoutManager);
         binding.rvMain.setAdapter(planetBasicAdapter);
         binding.rvMain.setOnScrollChangeListener((view, i, i1, i2, i3) -> {
-            if (!binding.rvMain.canScrollVertically(1)){
+            if (!binding.rvMain.canScrollVertically(1)) {
                 loadPlanets();
             }
 
-            if (mainLayoutManager.findFirstVisibleItemPosition() == 0 && binding.tvHeader.getAlpha() < 1f && !isAnimating){
+            if (mainLayoutManager.findFirstVisibleItemPosition() == 0 && binding.tvHeader.getAlpha() < 1f && !isAnimating) {
                 isAnimating = true;
                 binding.tvHeader.animate().setDuration(500).alpha(1f).setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
                         isAnimating = false;
                     }
                 }).start();
-            } else if( mainLayoutManager.findFirstVisibleItemPosition() > 0 && binding.tvHeader.getAlpha() > 0f && !isAnimating) {
+            } else if (mainLayoutManager.findFirstVisibleItemPosition() > 0 && binding.tvHeader.getAlpha() > 0f && !isAnimating) {
                 binding.tvHeader.animate().setDuration(500).alpha(0f).setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -92,9 +92,9 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    void loadPlanets(){
+    void loadPlanets() {
         if (hasMoreData) {
-            Log.e( "init: ", "Has data");
+            Log.e("init: ", "Has data");
             viewModel.fetchPlanetData();
         }
     }

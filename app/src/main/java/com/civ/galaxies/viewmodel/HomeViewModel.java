@@ -8,10 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.civ.galaxies.api.APIInterface;
 import com.civ.galaxies.api.client.APIClient;
-import com.civ.galaxies.model.Planet;
 import com.civ.galaxies.model.PlanetResponse;
-
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -26,25 +23,25 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<Boolean> hasMoreData = new MutableLiveData<>();
     private final MutableLiveData<String> onError = new MutableLiveData<>();
+    private int nextPage = 1;
 
-    public LiveData<PlanetResponse> getPlanets(){
+    public LiveData<PlanetResponse> getPlanets() {
         return mutableLivePlanets;
     }
 
-    public LiveData<Boolean> isLoading(){
+    public LiveData<Boolean> isLoading() {
         return isLoading;
     }
-    public LiveData<Boolean> hasMoreData(){
+
+    public LiveData<Boolean> hasMoreData() {
         return hasMoreData;
     }
 
-    public LiveData<String> onError(){
+    public LiveData<String> onError() {
         return onError;
     }
 
-    private int nextPage = 1;
-
-    public void fetchPlanetData(){
+    public void fetchPlanetData() {
         isLoading.setValue(true);
         disposable.add(
                 apiInterface.getAllPlanets(nextPage)
@@ -54,14 +51,14 @@ public class HomeViewModel extends ViewModel {
                             if (planetResponse.getResults() != null) {
                                 mutableLivePlanets.postValue(planetResponse);
 
-                                if (planetResponse.getNext() != null){
+                                if (planetResponse.getNext() != null) {
                                     hasMoreData.postValue(true);
                                     nextPage++;
-                                    Log.e( "fetchPlanetData: ", nextPage + " Has next");
+                                    Log.e("fetchPlanetData: ", nextPage + " Has next");
                                 } else {
                                     hasMoreData.postValue(false);
 
-                                    Log.e( "fetchPlanetData: ", nextPage + " No next");
+                                    Log.e("fetchPlanetData: ", nextPage + " No next");
                                 }
                             } else {
                                 onError.postValue("Couldn't find planet data.");

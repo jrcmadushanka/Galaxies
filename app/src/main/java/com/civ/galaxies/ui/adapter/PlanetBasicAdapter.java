@@ -36,7 +36,7 @@ public class PlanetBasicAdapter extends RecyclerView.Adapter<PlanetBasicAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             holder.bind(planetList.get(position));
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
@@ -46,7 +46,7 @@ public class PlanetBasicAdapter extends RecyclerView.Adapter<PlanetBasicAdapter.
         return planetList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         CardPlanetBinding binding;
 
         public ViewHolder(@NonNull CardPlanetBinding itemView) {
@@ -54,7 +54,7 @@ public class PlanetBasicAdapter extends RecyclerView.Adapter<PlanetBasicAdapter.
             binding = itemView;
         }
 
-        void bind(Planet planet){
+        void bind(Planet planet) {
             binding.setPlanetViewModel(planet);
             planet.setImageId(new Random().nextInt(800));
             binding.getRoot().setOnClickListener(view -> {

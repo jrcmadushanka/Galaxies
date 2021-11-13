@@ -1,11 +1,11 @@
 package com.civ.galaxies.ui;
 
-import androidx.databinding.DataBindingUtil;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.civ.galaxies.R;
 import com.civ.galaxies.databinding.ActivitySplashScreenBinding;

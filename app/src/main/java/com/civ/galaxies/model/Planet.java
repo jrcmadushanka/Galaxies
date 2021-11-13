@@ -1,7 +1,8 @@
 package com.civ.galaxies.model;
 
 import java.io.Serializable;
-public class Planet implements Serializable{
+
+public class Planet implements Serializable {
 
     private String climate;
     private String terrain;
