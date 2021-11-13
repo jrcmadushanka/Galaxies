@@ -1,7 +1,5 @@
 package com.civ.galaxies.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -54,11 +52,8 @@ public class HomeViewModel extends ViewModel {
                                 if (planetResponse.getNext() != null) {
                                     hasMoreData.postValue(true);
                                     nextPage++;
-                                    Log.e("fetchPlanetData: ", nextPage + " Has next");
                                 } else {
                                     hasMoreData.postValue(false);
-
-                                    Log.e("fetchPlanetData: ", nextPage + " No next");
                                 }
                             } else {
                                 onError.postValue("Couldn't find planet data.");
